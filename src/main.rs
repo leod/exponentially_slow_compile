@@ -1,78 +1,63 @@
-#![type_length_limit = "320000000"]
+#![type_length_limit = "320000000000"]
 
-trait Fun {
-    fn eval(&self, t: usize) -> usize;
-}
-
-fn switch<F: Fun>(f: F) -> impl Fun {
-    WrapFn(move |t| f.eval(t))
-}
-
-struct WrapFn<F>(F);
-
-impl<F> Fun for WrapFn<F>
-where
-    F: Fn(usize) -> usize,
-{
-    fn eval(&self, t: usize) -> usize {
-        self.0(t)
-    }
+fn nest<F: Fn(usize) -> usize>(f: F) -> impl Fn(usize) -> usize {
+    move |t| f(t)
 }
 
 fn main() {
     println!("Hello, world!");
 
-    let anim = WrapFn(|_| 42);
+    let f = |_| 42;
 
     // 1
-    let anim = switch(anim);
+    let f = nest(f);
 
     // 2
-    let anim = switch(anim);
+    let f = nest(f);
 
     // 4
-    let anim = switch(anim);
-    let anim = switch(anim);
+    let f = nest(f);
+    let f = nest(f);
 
     // 8
     //    Finished dev [unoptimized + debuginfo] target(s) in 0.17s
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
 
     // 16
     //    Finished dev [unoptimized + debuginfo] target(s) in 0.26s
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
 
     // 24
     //    Finished dev [unoptimized + debuginfo] target(s) in 55.79s
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
-    let anim = switch(anim);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
 
     // 32
     //    Takes a long time, I got tired of waiting
-    /*let anim = switch(anim, C);
-    let anim = switch(anim, C);
-    let anim = switch(anim, C);
-    let anim = switch(anim, C);
-    let anim = switch(anim, C);
-    let anim = switch(anim, C);
-    let anim = switch(anim, C);
-    let anim = switch(anim, C);*/
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
+    let f = nest(f);
 
-    println!("{}", anim.eval(0));
+    println!("{}", f(42));
 }
