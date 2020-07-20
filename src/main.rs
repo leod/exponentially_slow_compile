@@ -1,9 +1,17 @@
-#![type_length_limit="3200000000000000"]
+#![type_length_limit = "3200000000000000"]
 
 use std::marker::PhantomData;
 
 trait Fun {
     fn eval(&self, t: usize) -> usize;
+}
+
+struct C;
+
+impl Fun for C {
+    fn eval(&self, _: usize) -> usize {
+        42
+    }
 }
 
 fn switch<F: Fun, G: Fun>(f: F, time: usize, g: G) -> impl Fun
@@ -27,45 +35,45 @@ where
 fn main() {
     println!("Hello, world!");
 
-    let anim = WrapFn(|_| 42);
+    let anim = C;
 
     // 1
-    let anim = switch(anim, 1, WrapFn(|_| 42));
+    let anim = switch(anim, 1, C);
 
     // 2
-    let anim = switch(anim, 1, WrapFn(|_| 42));
+    let anim = switch(anim, 1, C);
 
     // 4
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
 
     // 8
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
 
     // 16
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
 
     // 32
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
-    let anim = switch(anim, 1, WrapFn(|_| 42));
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
+    let anim = switch(anim, 1, C);
 
     println!("{}", anim.eval(0));
 }
