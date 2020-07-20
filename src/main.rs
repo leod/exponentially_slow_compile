@@ -1,6 +1,4 @@
-#![type_length_limit = "3200000000000000"]
-
-use std::marker::PhantomData;
+#![type_length_limit = "3200000"]
 
 trait Fun {
     fn eval(&self, t: usize) -> usize;
@@ -14,11 +12,8 @@ impl Fun for C {
     }
 }
 
-fn switch<F: Fun, G: Fun>(f: F, time: usize, g: G) -> impl Fun
-where
-    G: Fun,
-{
-    WrapFn(move |t| if t < time { f.eval(t) } else { g.eval(t) })
+fn switch<F: Fun, G: Fun>(f: F, g: G) -> impl Fun {
+    WrapFn(move |t| if t < 43 { f.eval(t) } else { g.eval(t) })
 }
 
 struct WrapFn<F>(F);
@@ -38,42 +33,54 @@ fn main() {
     let anim = C;
 
     // 1
-    let anim = switch(anim, 1, C);
+    let anim = switch(anim, C);
 
     // 2
-    let anim = switch(anim, 1, C);
+    let anim = switch(anim, C);
 
     // 4
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
 
     // 8
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
+    //    Finished dev [unoptimized + debuginfo] target(s) in 0.17s
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
 
     // 16
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
+    //    Finished dev [unoptimized + debuginfo] target(s) in 0.26s
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+
+    // 24
+    //    Finished dev [unoptimized + debuginfo] target(s) in 55.79s
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
 
     // 32
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
-    let anim = switch(anim, 1, C);
+    //    Takes a long time, I got tired of waiting
+    /*let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);
+    let anim = switch(anim, C);*/
 
     println!("{}", anim.eval(0));
 }
