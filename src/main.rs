@@ -3,10 +3,7 @@
 use std::marker::PhantomData;
 
 trait Fun {
-    type T;
-    type V;
-
-    fn eval(&self, t: Self::T) -> Self::V;
+    fn eval(&self, t: usize) -> usize;
 }
 
 struct Anim<F>(pub F);
@@ -14,40 +11,35 @@ struct Anim<F>(pub F);
 impl<F> Anim<F>
 where
     F: Fun,
-    F::T: Copy + PartialOrd,
 {
-    fn switch<G>(self, self_end: F::T, next: Anim<G>) -> Anim<impl Fun<T = F::T, V = F::V>>
+    fn switch<G>(self, self_end: usize, next: Anim<G>) -> Anim<impl Fun>
     where
-        G: Fun<T = F::T, V = F::V>,
+        G: Fun,
     {
-        cond(fun(move |t| t < self_end), self, next)
+        cond(fun(move |t| self_end), self, next)
     }
 }
 
-fn cond<T, V, F, G, H>(cond: Anim<F>, a: Anim<G>, b: Anim<H>) -> Anim<impl Fun<T = T, V = V>>
+fn cond<F, G, H>(cond: Anim<F>, a: Anim<G>, b: Anim<H>) -> Anim<impl Fun>
 where
-    T: Copy,
-    F: Fun<T = T, V = bool>,
-    G: Fun<T = T, V = V>,
-    H: Fun<T = T, V = V>,
+    F: Fun,
+    G: Fun,
+    H: Fun,
 {
-    fun(move |t| if cond.0.eval(t) { a.0.eval(t) } else { b.0.eval(t) })
+    fun(move |t| if cond.0.eval(t) > 0 { a.0.eval(t) } else { b.0.eval(t) })
 }
 
-fn fun<T, V>(f: impl Fn(T) -> V) -> Anim<impl Fun<T = T, V = V>> {
-    Anim(WrapFn(f, PhantomData))
+fn fun(f: impl Fn(usize) -> usize) -> Anim<impl Fun> {
+    Anim(WrapFn(f))
 }
 
-struct WrapFn<T, V, F: Fn(T) -> V>(F, PhantomData<(T, V)>);
+struct WrapFn<F>(F);
 
-impl<T, V, F> Fun for WrapFn<T, V, F>
+impl<F> Fun for WrapFn<F>
 where
-    F: Fn(T) -> V,
+    F: Fn(usize) -> usize,
 {
-    type T = T;
-    type V = V;
-
-    fn eval(&self, t: T) -> V {
+    fn eval(&self, t: usize) -> usize {
         self.0(t)
     }
 }
@@ -55,31 +47,31 @@ where
 fn main() {
     println!("Hello, world!");
 
-    let anim = fun(|_| 42.0);
+    let anim = fun(|_| 42);
 
     // 1
-    let anim = anim.switch(0.1, fun(|_| 42.0));
+    let anim = anim.switch(1, fun(|_| 42));
 
     // 2
-    let anim = anim.switch(0.1, fun(|_| 42.0));
+    let anim = anim.switch(1, fun(|_| 42));
 
     // 4
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
 
     // 8
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
 
     // 16
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
-    let anim = anim.switch(0.1, fun(|_| 42.0));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
+    let anim = anim.switch(1, fun(|_| 42));
 
-    println!("{}", anim.0.eval(0.0));
+    println!("{}", anim.0.eval(0));
 }
